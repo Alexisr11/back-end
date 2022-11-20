@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using LibrosApi.Filtros;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using LibrosApi.Utilidades;
+using NetTopologySuite.Geometries;
+using NetTopologySuite;
 
 namespace LibrosApi
 {
@@ -31,11 +34,24 @@ namespace LibrosApi
         {
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddSingleton(provider =>
+                new MapperConfiguration(config =>
+                {
+                    var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                    config.AddProfile(new AutoMapperProfiles(geometryFactory));
+                }).CreateMapper());
+
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+
+            services.AddTransient<IAlmacenarArchivos, AlmacenadorArchivos>();
+
+            services.AddHttpContextAccessor();
+
             services.AddDbContext<AplicationDbContext>(opciones =>
             {
-                opciones.UseSqlServer(Configuration.GetConnectionString("defaultConecction"));
+                opciones.UseSqlServer(Configuration.GetConnectionString("defaultConecction"),
+                    sqlServer => sqlServer.UseNetTopologySuite());
             });
-
 
             services.AddCors(opciones =>
             {
@@ -60,6 +76,8 @@ namespace LibrosApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 

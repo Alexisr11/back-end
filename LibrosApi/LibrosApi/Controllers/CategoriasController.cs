@@ -81,14 +81,14 @@ namespace LibrosApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existe = await Context.Categorias.AnyAsync(x => x.Id == id);
+            var existe = Context.Categorias.AnyAsync(x => x.Id == id);
 
             if (existe == null)
             {
                 return NotFound();
             }
 
-            Context.Remove(new Categorias() { Id = id});
+            Context.Remove(new Categorias() { Id = id });
             await Context.SaveChangesAsync();
             return NoContent();
         }

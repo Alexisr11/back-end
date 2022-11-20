@@ -12,7 +12,9 @@ namespace LibrosApi.Entidades
         [Required]
         [StringLength(maximumLength: 200)]
         public string Nombre { get; set; }
+        public string Biografia { get; set; }
         public DateTime FechadeNacimiento { get; set; }
         public string Foto { get; set; }
+        public List<LibrosAutores> LibrosAutores { get; set; }
     }
 }

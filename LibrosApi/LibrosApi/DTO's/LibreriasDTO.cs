@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace LibrosApi.DTO_s
 {
-    public class AutorDTO
+    public class LibreriasDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string Biografia { get; set; }
-        public DateTime FechadeNacimiento { get; set; }
-        public string Foto { get; set; }
+        public double Latitud { get; set; }
+        public double Longitud { get; set; }
     }
 }
