@@ -43,7 +43,7 @@ namespace LibrosApi
 
             services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
 
-            services.AddTransient<IAlmacenarArchivos, AlmacenadorArchivos>();
+            services.AddTransient<IAlmacenarArchivos, AlmacenarAzureStorage>();
 
             services.AddHttpContextAccessor();
 

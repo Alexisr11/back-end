@@ -32,7 +32,8 @@ namespace LibrosApi.Controllers
             Context = context;
             this.mapper = mapper;
         }
-
+        
+        // Consultamos todas las categorias
         [HttpGet]
         public async Task<ActionResult<List<CategoriasDTO>>> Get([FromQuery] PaginacionDTO paginacionDto)
         {

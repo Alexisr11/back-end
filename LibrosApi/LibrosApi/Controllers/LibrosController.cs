@@ -3,6 +3,7 @@ using LibrosApi.DTO_s;
 using LibrosApi.Entidades;
 using LibrosApi.Utilidades;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace LibrosApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] CreacionLibrosDTO creacionLibrosDTO)
+        public async Task<ActionResult> Post( [FromForm] CreacionLibrosDTO creacionLibrosDTO)
         {
             var libro = mapper.Map<Libro>(creacionLibrosDTO);
 
@@ -54,6 +55,18 @@ namespace LibrosApi.Controllers
                     libro.LibrosAutores[i].Orden = i;
                 }
             }
+        }
+
+        [HttpGet("PostGet")]
+        public async Task<ActionResult<LibrosPostGetDTO>> PostGet()
+        {
+            var categorias = await context.Categorias.ToListAsync();
+            var librerias = await context.Librerias.ToListAsync();
+
+            var CategoriasDTO = mapper.Map<List<CategoriasDTO>>(categorias);
+            var LibreriasDTO = mapper.Map<List<LibreriasDTO>>(librerias);
+
+            return new LibrosPostGetDTO() { Categorias = CategoriasDTO, Librerias = LibreriasDTO };
         }
     }
 }

@@ -8,6 +8,11 @@ namespace LibrosApi.Utilidades
 {
     public class AutoMapperProfiles: Profile
     {
+        public AutoMapperProfiles()
+        {
+
+        }
+
         public AutoMapperProfiles(GeometryFactory geometryFactory)
         {
             CreateMap<Categorias, CategoriasDTO>().ReverseMap();
@@ -26,7 +31,24 @@ namespace LibrosApi.Utilidades
 
             CreateMap<CreacionLibrosDTO, Libro>()
                 .ForMember(x => x.Poster, opciones => opciones.Ignore())
-                .ForMember(x => x.LibrosCategorias, opcion => opcion.ResolveUsing(MapearLibrosCategorias));
+                .ForMember(x => x.LibrosCategorias, opciones => opciones.MapFrom(MapearLibrosCategorias))
+                .ForMember(x => x.LibrosLibrerias, opciones => opciones.MapFrom(MapearLibrosLibrerias))
+                .ForMember(x => x.LibrosAutores, opciones => opciones.MapFrom(MapearLibrosAutores));
+        }
+
+        private List<LibrosAutores> MapearLibrosAutores(CreacionLibrosDTO creacionLibrosDTO,
+            Libro libro)
+        {
+            var resultado = new List<LibrosAutores>();
+
+            if (creacionLibrosDTO.Autores == null) { return resultado; }
+
+            foreach (var actor in creacionLibrosDTO.Autores)
+            {
+                resultado.Add(new LibrosAutores() { AutorId = actor.Id, Personaje = actor.Personaje });
+            }
+
+            return resultado;
         }
 
         private List<LibrosCategorias> MapearLibrosCategorias(CreacionLibrosDTO creacionLibrosDTO,
@@ -39,6 +61,21 @@ namespace LibrosApi.Utilidades
             foreach (var id in creacionLibrosDTO.CategoriasIds)
             {
                 resultado.Add(new LibrosCategorias() { CategoriaId = id });
+            }
+
+            return resultado;
+        }
+
+        private List<LibrosLibrerias> MapearLibrosLibrerias(CreacionLibrosDTO creacionLibrosDTO,
+            Libro libro)
+        {
+            var resultado = new List<LibrosLibrerias>();
+
+            if (creacionLibrosDTO.LibreriasIds == null) { return resultado; }
+
+            foreach (var id in creacionLibrosDTO.LibreriasIds)
+            {
+                resultado.Add(new LibrosLibrerias() { LibreriaId = id });
             }
 
             return resultado;

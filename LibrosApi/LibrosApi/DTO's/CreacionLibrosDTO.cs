@@ -11,8 +11,6 @@ namespace LibrosApi.DTO_s
 {
     public class CreacionLibrosDTO
     {
-        [Required]
-        [StringLength(maximumLength: 300)]
         public string Titulo { get; set; }
         public string Resumen { get; set; }
         public string BookTrailer { get; set; }

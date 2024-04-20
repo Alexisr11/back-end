@@ -102,5 +102,21 @@ namespace LibrosApi.Controllers
             await almacenarArchivos.borrarArchivo(autor.Foto, contenedor);
             return NoContent();
         }
+
+        [HttpPost("buscarPorNombre")]
+        public async Task<ActionResult<List<LibroAutorDTO>>> buscarPorNombre( [FromBody] string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre)) { return new List<LibroAutorDTO>(); }
+
+            var autores = await context.Autores
+                .Where(x => x.Nombre.Contains(nombre))
+                .Select(x => new LibroAutorDTO { Id = x.Id, Nombre = x.Nombre, Foto = x.Foto })
+                .Take(5)
+                .ToListAsync();
+
+            Console.WriteLine(autores);
+            return autores;
+        }
+
     }
 }
